@@ -5,10 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
+const session = require("express-session");
+const fileStore = require('session-file-store')(session);
+var app = express();
+app.use(session({
+  httpOnly: true,	
+  secure: true,	
+  secret: 'secret key',
+  saveUninitialized: true,
+  resave: false,
+  cookie: {	
+    httpOnly: true,
+    maxAge: 600000
+  },
+  store: new fileStore()
+}));
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-var app = express();
 
 // view engine setup
 app.use(cors())
@@ -20,6 +34,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// app.get('/', function(req, res, next) {
+//   if (req.session.views) {
+//     req.session.views++
+//     res.setHeader('Content-Type', 'text/html')
+//     res.write('<p>views: ' + req.session.views + '</p>')
+//     res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+//     res.end()
+//   } else {
+//     req.session.views = 1
+//     res.end('welcome to the session demo. refresh!')
+//   }
+// });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
