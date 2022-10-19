@@ -8,21 +8,27 @@ const cors = require('cors');
 const session = require("express-session");
 const fileStore = require('session-file-store')(session);
 var app = express();
+
 app.use(session({
-  httpOnly: true,	
-  secure: true,	
-  secret: 'secret key',
+  secret: '1@%24^%$3^*&98&^%$',
   saveUninitialized: true,
   resave: false,
-  cookie: {	
-    httpOnly: true,
-    maxAge: 600000
-  },
-  store: new fileStore()
+  store: new fileStore(),
+  cookie: { yeonsu: 100}
 }));
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// app.use(session({
+//   httpOnly: true,
+//   secret: 'secret key',
+//   saveUninitialized: true,
+//   resave: true,
+//   cookie: {	
+//     httpOnly: true,
+//     maxAge: 600000
+//   },
+//   store: new fileStore()
+// }));
+
 
 // view engine setup
 app.use(cors())
@@ -35,6 +41,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
 // app.get('/', function(req, res, next) {
 //   if (req.session.views) {
 //     req.session.views++

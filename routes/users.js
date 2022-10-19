@@ -62,8 +62,7 @@ router.get('/check', (req, res, next) => {
 
 router.post('/signin', (req, res, next) => {
   console.log('로그인 함수가 실행됩니다.');
-  console.log(req.body["email"]);
-  console.log(req.body["password"]);
+  console.log(req.body);
   
   var user_pk = NaN;
   for(user of dummy_users){
@@ -79,8 +78,7 @@ router.post('/signin', (req, res, next) => {
   else{
     req.session.userId = req.body["email"];
     req.session.isLogined = true;
-    res.cookie('name', 'yeonsuß', { domain: 'localhost:3000', path: '/admin', secure: true });
-    res.send('Login!')
+    res.send('Login!');
   }
   //res.send('postfail');
 })
