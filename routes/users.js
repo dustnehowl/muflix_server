@@ -52,7 +52,9 @@ router.get("/logout", function(req, res, next){
 })
 
 router.get('/check', (req, res, next) => {
-  console.log(req.session.isLogined);
+  console.log(req)
+  
+
   if(req.session.isLogined){
     return res.json({message: 'user 있다'});
   }else{
@@ -71,16 +73,19 @@ router.post('/signin', (req, res, next) => {
       break;
     }
   }
-  console.log(user_pk)
   if(isNaN(user_pk)){
     res.send('Try Again!')
   }
   else{
+    console.log("로그인 성공")
     req.session.userId = req.body["email"];
     req.session.isLogined = true;
-    res.send('Login!');
+    res.cookie("SESSIONID", req.sessionID)
+    res.send({
+      'message': "Login!",
+      'sessionId': req.sessionID
+    });
   }
-  //res.send('postfail');
 })
 
 module.exports = router;
