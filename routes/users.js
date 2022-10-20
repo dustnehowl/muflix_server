@@ -46,16 +46,21 @@ router.post('/signup',(req, res, next) => {
 });
 
 router.get("/logout", function(req, res, next){
+  res.clearCookie('sid');
+  res.clearCookie('SessionID');
   req.session.destroy();  // 내부 sessions 폴터 캐쉬 삭제
-  res.clearCookie('sid')
   res.send('logout')
 })
 
 router.get('/check', (req, res, next) => {
-  console.log(req)
+  console.log('유저를 확인합니다.');
+  //console.log(req.cookies);
+  let se_json = require('../sessions/' + req.cookies.SessionID);
+  let dummy_session = req.sessionID;
+  console.log(dummy_session);
+  console.log(se_json);
   
-
-  if(req.session.isLogined){
+  if(se_json.isLogined){
     return res.json({message: 'user 있다'});
   }else{
     return res.json({message: 'user 없음'});
@@ -80,7 +85,7 @@ router.post('/signin', (req, res, next) => {
     console.log("로그인 성공")
     req.session.userId = req.body["email"];
     req.session.isLogined = true;
-    res.cookie("SESSIONID", req.sessionID)
+    res.cookie("SessionID", req.sessionID)
     res.send({
       'message': "Login!",
       'sessionId': req.sessionID
