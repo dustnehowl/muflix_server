@@ -49,23 +49,44 @@ router.post('/signup',(req, res, next) => {
 
 router.get('/profile', (req, res, next) => {
   let decoded;
-
   //console.log(req.headers);
-  decoded = jwt.verify(req.headers.authorization, key);
-  console.log(decoded);
-  const user_id = decoded["nickname"];
-  const password = decoded["password"];
-  
-  res.send({
-    "user_id" : user_id,
-    "playlist" : "디비가 아직 없엉!",
-    "message" : "유저 조회중"
-  });
+  try{
+    decoded = jwt.verify(req.headers.authorization, key);
+    console.log(decoded);
+    const user_id = decoded["nickname"];
+    const password = decoded["password"];
+    
+    res.send({
+      "user_id" : user_id,
+      "playlist" : "디비가 아직 없엉!",
+      "message" : "유저 조회중"
+    });
+  }
+  catch{
+    res.send("No User");
+  }
 })
 
 router.get("/logout", function(req, res, next){
-  res.send('logout')
+  return res.status(200).json({
+    code: 200,
+    message: "Logout!",
+  });
 })
+
+router.get("/double_check", function(req, res, next) {
+  console.log("중복확인을 실행합니다.");
+  var user_id = req.body["email"];
+  const user = dummy_users.filter(user => user.user_id === user_id);
+  if(user.length > 0) {
+    console.log("사용 불가능한 아이디입니다.");
+    res.send("Try Again");
+  }
+  else{
+    console.log("가능한 ID입니다.")
+    res.send("Available");
+  }
+});
 
 router.post('/signin', (req, res, next) => {
   console.log('로그인 함수가 실행됩니다.');
@@ -76,14 +97,12 @@ router.post('/signin', (req, res, next) => {
   let token = "";
 
   const user = dummy_users.filter(user => user.user_id === user_id && user.password === password);
-
-  if(user) {
+  if(user.length > 0) {
     console.log("로그인 성공")
     token = jwt.sign(
       {
         type: "JWT",
         nickname: user_id,
-        password: password,
       },
       key,{
         expiresIn: "60m",
