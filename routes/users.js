@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
 
+const key = "yeonsu";
 const dummy_users = [
   {
     "id": 1,
@@ -45,51 +47,57 @@ router.post('/signup',(req, res, next) => {
   res.send('Sign up!');
 });
 
+router.get('/profile', (req, res, next) => {
+  let decoded;
+
+  //console.log(req.headers);
+  decoded = jwt.verify(req.headers.authorization, key);
+  console.log(decoded);
+  const user_id = decoded["nickname"];
+  const password = decoded["password"];
+  
+  res.send({
+    "user_id" : user_id,
+    "playlist" : "디비가 아직 없엉!",
+    "message" : "유저 조회중"
+  });
+})
+
 router.get("/logout", function(req, res, next){
-  res.clearCookie('sid');
-  res.clearCookie('SessionID');
-  req.session.destroy();  // 내부 sessions 폴터 캐쉬 삭제
   res.send('logout')
 })
 
-router.get('/check', (req, res, next) => {
-  console.log('유저를 확인합니다.');
-  //console.log(req.cookies);
-  let se_json = require('../sessions/' + req.cookies.SessionID);
-  let dummy_session = req.sessionID;
-  console.log(dummy_session);
-  console.log(se_json);
-  
-  if(se_json.isLogined){
-    return res.json({message: 'user 있다'});
-  }else{
-    return res.json({message: 'user 없음'});
-  }
-});
-
 router.post('/signin', (req, res, next) => {
   console.log('로그인 함수가 실행됩니다.');
+
   console.log(req.body);
-  
-  var user_pk = NaN;
-  for(user of dummy_users){
-    if(user["user_id"] === req.body["email"] && user["password"] === req.body["password"]){
-      user_pk = user["id"];
-      break;
-    }
-  }
-  if(isNaN(user_pk)){
-    res.send('Try Again!')
+  var user_id = req.body["email"];
+  var password = req.body["password"];
+  let token = "";
+
+  const user = dummy_users.filter(user => user.user_id === user_id && user.password === password);
+
+  if(user) {
+    console.log("로그인 성공")
+    token = jwt.sign(
+      {
+        type: "JWT",
+        nickname: user_id,
+        password: password,
+      },
+      key,{
+        expiresIn: "60m",
+        issuer: "토큰발급자",
+      }
+    );
+    return res.status(200).json({
+      code: 200,
+      message: "token is created",
+      token: token,
+    });
   }
   else{
-    console.log("로그인 성공")
-    req.session.userId = req.body["email"];
-    req.session.isLogined = true;
-    res.cookie("SessionID", req.sessionID)
-    res.send({
-      'message': "Login!",
-      'sessionId': req.sessionID
-    });
+    res.send('Try Again!')
   }
 })
 
