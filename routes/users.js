@@ -20,14 +20,14 @@ const dummy_users = [
   },
   {
     "id": 3,
-    "user_id" : "dustnrkfnfn@hanmail.net",
+    "user_id" : "dustnrkfnfn@gmail.com",
     "이름": "딤 연수",
     "전화번호": "010 4665 7923",
     "password": "y8237922"
   },
   {
     "id": 4,
-    "user_id" : "dustnrkfnfn@hanmail.net",
+    "user_id" : "dustnrkfnfn@yahoo.co.kr",
     "이름": "림 연수",
     "전화번호": "010 4665 7924",
     "password": "y8237922"
@@ -48,19 +48,26 @@ router.post('/signup',(req, res, next) => {
 });
 
 router.get('/profile', (req, res, next) => {
+  console.log("프로필을 확인합니다.");
   let decoded;
   //console.log(req.headers);
   try{
     decoded = jwt.verify(req.headers.authorization, key);
-    console.log(decoded);
+    //console.log(decoded);
     const user_id = decoded["nickname"];
-    const password = decoded["password"];
-    
-    res.send({
-      "user_id" : user_id,
-      "playlist" : "디비가 아직 없엉!",
-      "message" : "유저 조회중"
-    });
+    const user = dummy_users.filter(user => user.user_id === user_id)[0];
+    console.log(user);
+
+    res.send([
+      {
+        "user_id" : user["user_id"],
+        "이름" : user["이름"],
+        "전화번호" : user["전화번호"],
+      },
+      {
+        "playlist" : "곧 줄게!!!",
+      }
+    ]);
   }
   catch{
     res.send("No User");
