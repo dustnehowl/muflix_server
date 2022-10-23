@@ -50,27 +50,21 @@ router.post('/signup',(req, res, next) => {
 
 router.get('/profile', (req, res, next) => {
   console.log("프로필을 확인합니다.");
-  let decoded;
   try{
-    decoded = jwt.verify(req.headers.authorization, key);
-    console.log("token 디코더 완료");
+    let decoded = jwt.verify(req.headers.authorization, key);
+    //console.log("token 디코더 완료");
     const user_id = decoded["nickname"];
     db.getLoginUser(user_id, (rows) => {
-      console.log(rows[0]);
-    });
-    const user = dummy_users.filter(user => user.user_id === user_id)[0];
-    console.log(user);
-
-    res.send([
+      res.send([
       {
-        "user_id" : user["email"],
-        "이름" : user["name"],
-        "전화번호" : user["phone"],
+        "user_id" : rows[0].email,
+        "이름" : rows[0].name,
+        "전화번호" : rows[0].phone,
       },
       {
         "playlist" : "곧 줄게!!!",
-      }
-    ]);
+      }]);
+    });
   }
   catch{
     res.send("No User");
@@ -106,28 +100,29 @@ router.post('/signin', (req, res, next) => {
   var password = req.body["password"];
   let token = "";
 
-  const user = dummy_users.filter(user => user.user_id === user_id && user.password === password);
-  if(user.length > 0) {
-    console.log("로그인 성공")
-    token = jwt.sign(
-      {
-        type: "JWT",
-        nickname: user_id,
-      },
-      key,{
-        expiresIn: "60m",
-        issuer: "토큰발급자",
-      }
-    );
-    return res.status(200).json({
-      code: 200,
-      message: "token is created",
-      token: token,
-    });
-  }
-  else{
-    res.send('Try Again!')
-  }
-})
+  db.signIn(user_id, password, (rows) => {
+    if(rows.length > 0){
+      console.log("로그인 성공");
+      token = jwt.sign(
+          {
+            type: "JWT",
+            nickname: user_id,
+          },
+          key,{
+            expiresIn: "60m",
+            issuer: "토큰발급자",
+          }
+      );
+      return res.status(200).json({
+        code: 200,
+        message: "token is created",
+        token: token,
+      });
+    }
+    else {
+      return res.send('Try Again!');
+    }
+  });
+});
 
 module.exports = router;

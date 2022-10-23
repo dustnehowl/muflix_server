@@ -24,7 +24,18 @@ function getLoginUser(user_id, callback){
     });
 }
 
+function signIn(user_id, password, callback) {
+    connection.query(`SELECT * FROM USER WHERE email="${user_id}" AND password="${password}"`, (err, rows, fields) => {
+        if(err){
+            console.log("error!!!");
+            throw err;
+        }
+        callback(rows);
+    });
+}
+
 module.exports = {
     getAllMembers,
-    getLoginUser
+    getLoginUser,
+    signIn
 }
