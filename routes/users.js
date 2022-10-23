@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
+const db = require('../db.js');
 
 const key = "yeonsu";
 const dummy_users = [
@@ -50,19 +51,21 @@ router.post('/signup',(req, res, next) => {
 router.get('/profile', (req, res, next) => {
   console.log("프로필을 확인합니다.");
   let decoded;
-  //console.log(req.headers);
   try{
     decoded = jwt.verify(req.headers.authorization, key);
-    //console.log(decoded);
+    console.log("token 디코더 완료");
     const user_id = decoded["nickname"];
+    db.getLoginUser(user_id, (rows) => {
+      console.log(rows[0]);
+    });
     const user = dummy_users.filter(user => user.user_id === user_id)[0];
     console.log(user);
 
     res.send([
       {
-        "user_id" : user["user_id"],
-        "이름" : user["이름"],
-        "전화번호" : user["전화번호"],
+        "user_id" : user["email"],
+        "이름" : user["name"],
+        "전화번호" : user["phone"],
       },
       {
         "playlist" : "곧 줄게!!!",
