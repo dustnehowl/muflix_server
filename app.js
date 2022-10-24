@@ -26,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var musicsRouter = require('./routes/musics');
 
 app.use(cookieParser());
 // app.use(
@@ -46,6 +47,7 @@ app.use(tokenChecker);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/musics', musicsRouter);
 
 
 // catch 404 and forward to error handler
