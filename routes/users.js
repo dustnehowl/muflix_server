@@ -53,7 +53,6 @@ router.post('/signup', (req, res, next) => {
         throw err2;
       }
       console.log("중복유저 확인 중...");
-      console.log(rows2);
       if(rows2.length > 0) return res.status(404).json({
         code: 404,
         message: "Already exist user",
