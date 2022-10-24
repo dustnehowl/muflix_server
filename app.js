@@ -37,7 +37,7 @@ app.use(cookieParser());
 // }));
 
 const tokenChecker = function (req, res, next) {
-  console.log("토큰을 확인합니다.")
+  console.log("토큰을 확인합니다.");
   //console.log(req);
   next();
 };

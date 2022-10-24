@@ -40,13 +40,12 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/signup',(req, res, next) => {
-  var tmp_obj = req.body;
-  tmp_obj["id"] = id++;
-  dummy_users.push(tmp_obj);
-  console.log(dummy_users);
-  res.send('Sign up!');
-});
+router.post('/signup',(req, res, next) =>{
+  console.log("회원가입을 진행합니다.");
+  db.signUp(req.body , (rows) => {
+    res.send("회원가입 완료");
+  });
+})
 
 router.get('/profile', (req, res, next) => {
   console.log("프로필을 확인합니다.");

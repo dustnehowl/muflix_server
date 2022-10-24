@@ -34,8 +34,29 @@ function signIn(user_id, password, callback) {
     });
 }
 
+function signUp(new_user, callback){
+
+    connection.query(`SELECT * FROM USER`, (err, rows, fields) => {
+        if(err) throw err;
+        connection.query(`SELECT * FROM USER WHERE email="${new_user.user_id}"`, (err2, rows2, fields) => {
+            if(err2) throw err2;
+            if (rows.length > 0) return 0;
+            else{
+                const user_num = rows.length + 1;
+                connection.query(`INSERT INTO USER 
+                ( id, name, phone, email, password ) 
+                VALUE (${user_num}, "${new_user.이름}", "${new_user.전화번호}", "${new_user.user_id}", "${new_user.password}");`
+                );
+                callback(rows);
+            }
+        });
+    })
+}
+
 module.exports = {
     getAllMembers,
     getLoginUser,
-    signIn
+    signIn,
+    signUp,
+
 }
