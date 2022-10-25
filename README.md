@@ -11,6 +11,10 @@
 * users/logout : 로그아웃 API
 * users/delUser : 현재 접속해 있는 유저 탈퇴
 
+* musics/getAllMusics : 모든 음악정보를 프론트로 보낸다.
+* musics/getMusic : 음악정보를 조회한다.
+* musics/getAllPlaylist : 모든 플레이리스트를 프론트로 보낸다.
+
 
 2. POST
 
@@ -29,5 +33,14 @@ req.body {
     "이름" : "?",
     "전화번호" : "?",
     "password" : "?",
+}
+```
+
+* musics/addMusic : 음악추가 API
+```
+req.body {
+    "name": "?",
+    "singer": "?",
+    "album_cover": "?",
 }
 ```
