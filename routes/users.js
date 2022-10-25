@@ -43,27 +43,23 @@ router.get('/profile', (req, res, next) => {
 router.post('/signup', (req, res, next) => {
   console.log("회원가입을 진행합니다.");
   const new_user = req.body;
-  db.query(`SELECT * FROM USER`, (err, rows, fields) => {
-    if(err) throw err;
-    const user_num = rows.length + 1;
-    db.query(`SELECT * FROM USER WHERE email="${new_user.user_id}"`,(err2, rows2, fields2) => {
-      if (err2) {
-        console.log("아이디 중복 에러");
-        throw err2;
-      }
-      console.log("중복유저 확인 중...");
-      if(rows2.length > 0) return res.status(404).json({
-        code: 404,
-        message: "Already exist user",
-      });
-      else{
-        db.query(`INSERT INTO USER 
-                  ( id, name, phone, email, password ) 
-                  VALUE (${user_num}, "${new_user.이름}", "${new_user.전화번호}", "${new_user.user_id}", "${new_user.password}");`
-                  );
-        res.send("회원가입 성공");
-      }
+  db.query(`SELECT * FROM USER WHERE email="${new_user.user_id}"`,(err2, rows2, fields2) => {
+    if (err2) {
+      console.log("아이디 중복 에러");
+      throw err2;
+    }
+    console.log("중복유저 확인 중...");
+    if(rows2.length > 0) return res.status(404).json({
+      code: 404,
+      message: "Already exist user",
     });
+    else{
+      db.query(`INSERT INTO USER 
+                ( name, phone, email, password ) 
+                VALUE ("${new_user.이름}", "${new_user.전화번호}", "${new_user.user_id}", "${new_user.password}");`
+                );
+      res.send("회원가입 성공");
+    }
   });
 });
 

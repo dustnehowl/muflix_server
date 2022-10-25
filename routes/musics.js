@@ -13,6 +13,13 @@ router.get('/getAllMusics', (req, res, next) => {
 router.post('/addMusic', (req, res, next) => {
     console.log("새로운 음악을 추가합니다.");
     const new_music = req.body;
+    console.log(new_music);
+    res.send("잠시만 기다려주쇼...");
+    db.query(`INSERT INTO MUSIC 
+                ( name, singer, album_cover ) 
+                VALUE ("${new_music.name}", "${new_music.Singer}", "${new_music.cover}");`
+                );
+      res.send("회원가입 성공");
 });
 
 router.get('/getMusic', (req, res, next) => {
