@@ -19,14 +19,16 @@ router.post('/addMusic', (req, res, next) => {
                 ( name, singer, album_cover ) 
                 VALUE ("${new_music.name}", "${new_music.Singer}", "${new_music.cover}");`
                 );
-      res.send("회원가입 성공");
+    res.send({
+        "name" : new_music.name,
+        "message" : "음악추가 완료"
+    });
 });
 
 router.get('/getMusic', (req, res, next) => {
     console.log("음악정보를 조회합니다.");
     const tmp_music = req.body;
     // json 으로 올라나??
-
 });
 
 router.get('/getAllPlaylist', (req, res, next) => {
