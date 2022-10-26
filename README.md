@@ -44,3 +44,13 @@ req.body {
     "album_cover": "?",
 }
 ```
+
+* musics/addPlaylist : 플레이리스트추가 API
+```
+req.body {
+    "name" : "?",
+    "information" : "?",
+    "musics" : 미정,
+}
+// musics 와 연동이 필요 아직 실사용은 불가능하다.!!
+```
