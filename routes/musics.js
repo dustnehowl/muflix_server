@@ -14,7 +14,6 @@ router.post('/addMusic', (req, res, next) => {
     console.log("새로운 음악을 추가합니다.");
     const new_music = req.body;
     console.log(new_music);
-    res.send("잠시만 기다려주쇼...");
     db.query(`INSERT INTO MUSIC 
                 ( name, singer, album_cover ) 
                 VALUE ("${new_music.name}", "${new_music.Singer}", "${new_music.cover}");`
@@ -35,6 +34,19 @@ router.get('/getAllPlaylist', (req, res, next) => {
     db.query(`SELECT * FROM PLAYLIST`, (err, rows, fields) => {
         if(err) throw err;
         res.send(rows);
+    });
+});
+
+router.post('/addPlaylist', (req, res, next) => {
+    console.log("새로운 플레이리스트를 추가합니다.");
+    const new_playlist = req.body;
+    console.log(new_playlist);
+    db.query(`INSERT INTO PLAYLIST
+                ( name, information )
+                VALUE ("${new_playlist.name}", "${new_playlist.information}");`);
+    res.send({
+        "name" : new_playlist.name,
+        "message" : "플레이리스트 추가 완료",
     });
 });
 
