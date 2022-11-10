@@ -43,6 +43,7 @@ router.get('/profile', (req, res, next) => {
 router.post('/signup', (req, res, next) => {
   console.log("회원가입을 진행합니다.");
   const new_user = req.body;
+  console.log(req.body);
   db.query(`SELECT * FROM USER WHERE email="${new_user.user_id}"`,(err2, rows2, fields2) => {
     if (err2) {
       console.log("아이디 중복 에러");
