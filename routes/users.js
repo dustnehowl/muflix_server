@@ -43,7 +43,6 @@ router.get('/profile', (req, res, next) => {
 router.post('/signup', (req, res, next) => {
   console.log("회원가입을 진행합니다.");
   const new_user = req.body;
-  console.log(req.body);
   db.query(`SELECT * FROM USER WHERE email="${new_user.user_id}"`,(err2, rows2, fields2) => {
     if (err2) {
       console.log("아이디 중복 에러");
@@ -57,7 +56,7 @@ router.post('/signup', (req, res, next) => {
     else{
       db.query(`INSERT INTO USER 
                 ( name, phone, email, password ) 
-                VALUE ("${new_user.이름}", "${new_user.전화번호}", "${new_user.user_id}", "${new_user.password}");`
+                VALUE ("${new_user.nickname}", "${new_user.phonenum}", "${new_user.email}", "${new_user.password1}");`
                 );
       res.send("회원가입 성공");
     }
