@@ -81,18 +81,18 @@ router.get('/delUser', (req, res, next) => {
 
 router.post('/signin', (req, res, next) => {
   console.log("로그인 함수가 실행됩니다.");
-  const user_id = req.body["email"];
+  const email = req.body["email"];
   const password = req.body["password"];
   let token = "";
 
-  db.query(`SELECT * FROM USER WHERE email="${user_id}" AND password="${password}"`, (err, rows, fields) => {
+  db.query(`SELECT * FROM USER WHERE email="${email}" AND password="${password}"`, (err, rows, fields) => {
     if(err) throw err;
     if(rows.length > 0){
       console.log("로그인 성공");
       token = jwt.sign(
         {
           type: "JWT",
-          nickname: user_id,
+          nickname: email,
         },
         key,{
           expiresIn: "60m",
