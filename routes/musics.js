@@ -24,10 +24,13 @@ router.post('/addMusic', (req, res, next) => {
     });
 });
 
-router.get('/getMusic', (req, res, next) => {
+router.get('/getMusic/:id', (req, res, next) => {
+    var musicid = req.params.id;
     console.log("음악정보를 조회합니다.");
-    const tmp_music = req.body;
-    // json 으로 올라나??
+    db.query(`SELECT * FROM MUSIC WHERE id=${musicid}`,(err, rows, fields) => {
+        if(err) throw err;
+        res.send(rows);
+    })
 });
 
 router.get('/getAllPlaylist', (req, res, next) => {
