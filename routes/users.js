@@ -96,7 +96,7 @@ router.post('/signin', (req, res, next) => {
           nickname: email,
         },
         key,{
-          expiresIn: "1m",
+          expiresIn: "30m",
           issuer: "토큰발급자",
         }
       );

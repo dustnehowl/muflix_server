@@ -45,11 +45,10 @@ const tokenChecker = function (req, res, next) {
         message: '토큰이 만료되었습니다.'
       });
     }
-    next();
-  //   return res.status(401).json({
-  //     code: 401,
-  //     message: '유효하지 않은 토큰입니다.'
-  //  });
+    return res.status(401).json({
+      code: 401,
+      message: '유효하지 않은 토큰입니다.'
+   });
   }
 };
 
