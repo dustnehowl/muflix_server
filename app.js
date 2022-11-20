@@ -7,6 +7,7 @@ var cors = require('cors');
 
 const session = require("express-session");
 const fileStore = require('session-file-store')(session);
+const key = "yeonsu";
 var app = express();
 
 // view engine setup
@@ -29,18 +30,26 @@ var usersRouter = require('./routes/users');
 var musicsRouter = require('./routes/musics');
 
 app.use(cookieParser());
-// app.use(
-//   session({
-//   secret: '1@%24^%$3^*&98&^%$',
-//   saveUninitialized: true,
-//   resave: false,
-//   store: new fileStore()
-// }));
 
 const tokenChecker = function (req, res, next) {
   console.log("토큰을 확인합니다.");
-  //console.log(req);
-  next();
+  try {
+    let decoded = jwt.verify(req.headers.authorization, key);
+    res.send("토큰 확인 완료");
+    next();
+  }
+  catch(error) {
+    if (error.name === 'TokenExpireError') {
+      return res.status(419).json({
+        code: 419,
+        message: '토큰이 만료되었습니다.'
+      });
+    }
+    return res.status(401).json({
+      code: 401,
+      message: '유효하지 않은 토큰입니다.'
+   });
+  }
 };
 
 app.use(tokenChecker);
