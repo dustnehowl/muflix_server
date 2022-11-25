@@ -13,11 +13,4 @@ router.post('/signup', function(req, res, next){
   console.log(req.body);
 })
 
-router.get('/test', (req, res, next) => {
-  db.getAllMembers((rows) => {
-    console.log(rows);
-    res.send(rows);
-  });
-});
-
 module.exports = router;
