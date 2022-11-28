@@ -53,8 +53,9 @@ router.post('/addPlaylist', (req, res, next) => {
             if(err) console.log(err);
             const new_playlist = req.body;
             const user = rows[0];
+            console.log(user.id, new_playlist.name, new_playlist.information);
             db.query(`INSERT INTO PLAYLIST
-                     ( owner, name, desc )
+                     ( owner, name, information )
                      VALUE ("${user.id}", "${new_playlist.name}", "${new_playlist.information}");`);
             res.send({
                 "name" : new_playlist.name,
