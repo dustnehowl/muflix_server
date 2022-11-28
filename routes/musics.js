@@ -57,6 +57,12 @@ router.post('/addPlaylist', (req, res, next) => {
             db.query(`INSERT INTO PLAYLIST
                      ( owner, name, information )
                      VALUE ("${user.id}", "${new_playlist.name}", "${new_playlist.information}");`);
+            db.query(`SELECT id INTO PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}"`, (err, rows, fields) => {
+                console.log(rows[0]);
+            });
+            // db.query(`INSERT INTO music_playlist
+            //          ( music_id, playlist_id )
+            //          VALUE ("${}","${}");`);
             res.send({
                 "name" : new_playlist.name,
                 "message" : "플레이리스트 추가 완료",
