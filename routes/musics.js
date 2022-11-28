@@ -57,8 +57,9 @@ router.post('/addPlaylist', (req, res, next) => {
             db.query(`INSERT INTO PLAYLIST
                      ( owner, name, information )
                      VALUE ("${user.id}", "${new_playlist.name}", "${new_playlist.information}");`);
-            db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
+            db.query(`SELECT * FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
                 if(err) throw err;
+                console.log(rows[0].id);
                 res.send(rows[0]);
             });
             // db.query(`INSERT INTO music_playlist
