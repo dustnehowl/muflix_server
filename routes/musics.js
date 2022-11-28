@@ -63,8 +63,8 @@ router.post('/addPlaylist', (req, res, next) => {
         //     "message" : "플레이리스트 추가 완료",
         // });
     }
-    catch {
-        res.send("NO USER");
+    catch (e) {
+        res.send(e);
     }
 });
 
