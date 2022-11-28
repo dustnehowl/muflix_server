@@ -62,7 +62,7 @@ router.post('/addPlaylist', (req, res, next) => {
                 for(let tmp_music of new_playlist.musics){
                     db.query(`INSERT INTO music_playlist
                             ( music_id, playlist_id )
-                            VALUE ("${tmp_music}","${rows[0]}");`);
+                            VALUE ("${tmp_music}","${rows[0].id}");`);
                 }
                 res.send({
                     "name" : new_playlist.name,
