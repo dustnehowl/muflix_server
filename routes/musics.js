@@ -59,16 +59,16 @@ router.post('/addPlaylist', (req, res, next) => {
                      VALUE ("${user.id}", "${new_playlist.name}", "${new_playlist.information}");`);
             db.query(`SELECT id FROM PLAYLIST WHERE owner="${user.id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
                 if(err) throw err;
-                console.log(rows[0]);
-                res.send(rows);
+                for(let tmp_music of new_playlist.musics){
+                    db.query(`INSERT INTO music_playlist
+                            ( music_id, playlist_id )
+                            VALUE ("${tmp_music}","${rows[0]}");`);
+                }
+                res.send({
+                    "name" : new_playlist.name,
+                    "message" : "플레이리스트 추가 완료",
+                });
             });
-            // db.query(`INSERT INTO music_playlist
-            //          ( music_id, playlist_id )
-            //          VALUE ("${}","${}");`);
-            // res.send({
-            //     "name" : new_playlist.name,
-            //     "message" : "플레이리스트 추가 완료",
-            // });
         });
     }
     catch (e) {
