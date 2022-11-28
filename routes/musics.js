@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../db.js');
+var jwt = require('jsonwebtoken');
+
+const key = "yeonsu";
 
 router.get('/getAllMusics', (req, res, next) => {
     console.log("모든 음악들을 조회중입니다.");
@@ -42,15 +45,27 @@ router.get('/getAllPlaylist', (req, res, next) => {
 
 router.post('/addPlaylist', (req, res, next) => {
     console.log("새로운 플레이리스트를 추가합니다.");
-    const new_playlist = req.body;
-    console.log(new_playlist);
-    db.query(`INSERT INTO PLAYLIST
-                ( name, information )
-                VALUE ("${new_playlist.name}", "${new_playlist.information}");`);
-    res.send({
-        "name" : new_playlist.name,
-        "message" : "플레이리스트 추가 완료",
-    });
+    try {
+        let decoded = jwt.verify(req.headers.authorization, key);
+        const user_id = decoded["nickname"];
+        db.query(`SELECT id FROM USER WHERE email="${user_id}"`, (err, rows, fields) => {
+            if(err) console.log(err);
+            console.log(rows[0]);
+            res.send("hihi");
+        });
+        //const new_playlist = req.body;
+        //console.log(new_playlist);
+        // db.query(`INSERT INTO PLAYLIST
+        //             ( owner, name, desc )
+        //             VALUE ("${}", "${new_playlist.name}", "${new_playlist.information}");`);
+        // res.send({
+        //     "name" : new_playlist.name,
+        //     "message" : "플레이리스트 추가 완료",
+        // });
+    }
+    catch {
+        res.send("NO USER");
+    }
 });
 
 module.exports = router;
