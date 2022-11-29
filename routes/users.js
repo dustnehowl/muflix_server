@@ -4,6 +4,28 @@ var jwt = require('jsonwebtoken');
 const db = require('../db.js');
 
 const key = "yeonsu";
+const tokenChecker = function (req, res, next) {
+  console.log("토큰을 확인합니다.");
+  try {
+    let decoded = jwt.verify(req.headers.authorization, key);
+    res.send("토큰 확인 완료");
+    next();
+  }
+  catch(error) {
+    if (error.name === 'TokenExpireError') {
+      return res.status(419).json({
+        code: 419,
+        message: '토큰이 만료되었습니다.'
+      });
+    }
+    return res.status(401).json({
+      code: 401,
+      message: '유효하지 않은 토큰입니다.'
+   });
+  }
+};
+
+router.use(tokenChecker);
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
@@ -41,35 +63,12 @@ router.get('/profile', (req, res, next) => {
   }
 });
 
-router.post('/signup', (req, res, next) => {
-  console.log("회원가입을 진행합니다.");
-  const new_user = req.body;
-  db.query(`SELECT * FROM USER WHERE email="${new_user.email}"`,(err2, rows2, fields2) => {
-    if (err2) {
-      console.log("아이디 중복 에러");
-      throw err2;
-    }
-    console.log("중복유저 확인 중...");
-    if(rows2.length > 0) return res.status(404).json({
-      code: 404,
-      message: "Already exist user",
-    });
-    else{
-      db.query(`INSERT INTO USER 
-                ( name, phone, email, password ) 
-                VALUE ("${new_user.nickname}", "${new_user.phonenum}", "${new_user.email}", "${new_user.password1}");`
-                );
-      res.send("회원가입 성공");
-    }
-  });
-});
-
 router.get('/delUser', (req, res, next) => {
   console.log("회원탈퇴를 진행합니다.");
   try{
-    //let decoded = jwt.verify(req.headers.authorization, key);
-    //const del_user = decoded["nickname"];
-    const del_user = "test2@gmail.com";
+    let decoded = jwt.verify(req.headers.authorization, key);
+    const del_user = decoded["nickname"];
+    //const del_user = "test2@gmail.com";
     db.query(`DELETE FROM USER WHERE email="${del_user}"`, (err, rows, fields) => {
       if(err) console.log(err);
       res.send("회원탈퇴 완료");
@@ -78,36 +77,6 @@ router.get('/delUser', (req, res, next) => {
   catch{
     res.send("NO USER");
   }
-})
-
-router.post('/signin', (req, res, next) => {
-  console.log("로그인 함수가 실행됩니다.");
-  const email = req.body["email"];
-  const password = req.body["password"];
-  let token = "";
-
-  db.query(`SELECT * FROM USER WHERE email="${email}" AND password="${password}"`, (err, rows, fields) => {
-    if(err) throw err;
-    if(rows.length > 0){
-      console.log("로그인 성공");
-      token = jwt.sign(
-        {
-          type: "JWT",
-          nickname: email,
-        },
-        key,{
-          expiresIn: "30m",
-          issuer: "토큰발급자",
-        }
-      );
-      return res.status(200).json({
-        code: 200,
-        message: "token is created",
-        token: token,
-      });
-    }
-    else return res.send('Try Again!');
-  });
 })
 
 router.get("/logout", function(req, res, next){
