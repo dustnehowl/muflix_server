@@ -8,7 +8,7 @@ const tokenChecker = function (req, res, next) {
   console.log("토큰을 확인합니다.");
   try {
     let decoded = jwt.verify(req.headers.authorization, key);
-    res.send("토큰 확인 완료");
+    //res.send("토큰 확인 완료");
     next();
   }
   catch(error) {
