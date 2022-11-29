@@ -1,6 +1,7 @@
 const { signedCookie } = require('cookie-parser');
 var express = require('express');
-const db = require('../db.js')
+const db = require('../db.js');
+var jwt = require('jsonwebtoken');
 const key = "yeonsu";
 var router = express.Router();
 
