@@ -45,7 +45,12 @@ router.get('/profile', (req, res, next) => {
     console.log(decoded);
     const user_id = decoded["nickname"];
     db.query(`SELECT * FROM USER WHERE email="${user_id}"`, (err, rows, fields) => {
-      if(err) console.log(err);
+      if(err){
+        return res.status(404).json({
+          code: 404,
+          message: '유저 조회 왜 안될까요',
+        });
+      }
       res.send([
         {
           "user_id" : rows[0].email,
