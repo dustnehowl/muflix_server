@@ -51,16 +51,18 @@ router.get('/profile', (req, res, next) => {
           message: '유저 조회 왜 안될까요',
         });
       }
-      res.send([
-        {
-          "user_id" : rows[0].email,
-          "이름" : rows[0].name,
-          "전화번호": rows[0].phone,
-        },
-        {
-          "playlist" : "곧줄게!!!",
-        }
-      ]);
+      db.query(`SELECT * FROM PLAYLIST WHERE id="${rows[0].id}"`,(err2, rows2, fields) => {
+        res.send([
+          {
+            "user_id" : rows[0].email,
+            "이름" : rows[0].name,
+            "전화번호": rows[0].phone,
+          },
+          {
+            "playlist" : rows2,
+          }
+        ]);
+      });
     });
   }
   catch{
