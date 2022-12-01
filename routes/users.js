@@ -42,7 +42,6 @@ router.get('/profile', (req, res, next) => {
   console.log("프로필을 확인합니다.");
   try{
     let decoded = jwt.verify(req.headers.authorization, key);
-    console.log(decoded);
     const user_id = decoded["nickname"];
     db.query(`SELECT * FROM USER WHERE email="${user_id}"`, (err, rows, fields) => {
       if(err){
