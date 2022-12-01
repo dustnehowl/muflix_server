@@ -27,6 +27,15 @@ router.post('/addMusic', (req, res, next) => {
     });
 });
 
+router.delete('/delMusic/:id', (req, res, next)=>{
+    console.log("음악을 삭제합니다.");
+    var musicid = req.params.id;
+    db.query(`DELETE FROM MUSIC WHERE id=${musicid}`,(err, rows, fields) => {
+        if(err) res.send(err);
+        res.send("음악삭제 완료");
+    })
+});
+
 router.get('/getMusic/:id', (req, res, next) => {
     var musicid = req.params.id;
     console.log("음악정보를 조회합니다.");
