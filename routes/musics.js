@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db.js');
 var jwt = require('jsonwebtoken');
-const { defaultValueSchemable } = require('sequelize/types/utils.js');
 
 const key = "yeonsu";
 
