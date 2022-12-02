@@ -36,6 +36,15 @@ router.delete('/delMusic/:id', (req, res, next)=>{
     })
 });
 
+router.delete('/delPlaylist/:id', (req, res, next) =>{
+    console.log("플레이리스트를 삭제합니다.");
+    var playlistid = req.params.id;
+    db.query(`DELETE FROM PLAYLIST WHERE id=${playlistid}`, (err, rows, fields) => {
+        if(err) res.send(err);
+        res.send("플레이리스트 삭제 완료");
+    })
+})
+
 router.get('/getMusic/:id', (req, res, next) => {
     var musicid = req.params.id;
     console.log("음악정보를 조회합니다.");
