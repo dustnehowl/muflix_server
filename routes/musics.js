@@ -109,4 +109,8 @@ router.post('/addPlaylist', (req, res, next) => {
     }
 });
 
+router.post('/updatePlaylist/:id', (req, res, next) => {
+    console.log("플레이리스트를 수정합니다.");
+});
+
 module.exports = router;
