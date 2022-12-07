@@ -45,7 +45,7 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
         db.query(`DELETE FROM PLAYLIST WHERE id=${playlistid} AND owner=${user_id};`, (err, rows, fields) => {
             if(err) res.send(err);
             console.log(rows);
-            res.send(rows);
+            res.send(rows[0]);
             // if (!rows) 
             //     return res.status(404).json({
             //     code: 412,
