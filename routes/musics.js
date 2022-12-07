@@ -128,7 +128,6 @@ router.put('/updatePlaylist/:id', (req, res, next) => {
         let owner = db.query(`SELECT owner FROM PLAYLIST WHERE id="${req.params.id}";`);
         console.log(owner);
         const tmp_playlist = req.body;
-        console.log(tmp_playlist);
         db.query(`UPDATE PLAYLIST SET name="${tmp_playlist.name}", information="${tmp_playlist.information}" WHERE id=${req.params.id};`);
         db.query(`DELETE FROM music_playlist WHERE playlist_id="${req.params.id}";`);
         for(let tmp_music of tmp_playlist.musics){
