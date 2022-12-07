@@ -44,9 +44,9 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
         var playlistid = req.params.id;
         console.log(playlistid)
         db.query(`SELECT owner FROM PLAYLIST WHERE id="${playlistid}";`,(err, rows, fields) => {
-            console.log(rows.owner);
+            console.log(rows[0].owner);
             console.log(user_id);
-            if(rows.owner == user_id){
+            if(rows[0].owner == user_id){
                 db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}";`, (err, rows, fields) => {
                     if(err) throw err;
                     db.query(`DELETE FROM music_playlist WHERE playlist_id="${playlistid}";`);
