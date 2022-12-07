@@ -123,6 +123,10 @@ router.post('/addPlaylist', (req, res, next) => {
 router.put('/updatePlaylist/:id', (req, res, next) => {
     console.log("플레이리스트를 수정합니다.");
     try{
+        let decoded = jwt.verify(req.headers.authorization, key);
+        const user_id = decoded["nickname"];
+        let owner = db.query(`SELECT owner FROM PLAYLIST WHERE id="${req.params.id}";`)[0];
+        console.log(owner);
         const tmp_playlist = req.body;
         console.log(tmp_playlist);
         db.query(`UPDATE PLAYLIST SET name="${tmp_playlist.name}", information="${tmp_playlist.information}" WHERE id=${req.params.id};`);
