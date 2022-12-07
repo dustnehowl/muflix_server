@@ -40,8 +40,8 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
     let decoded = jwt.verify(req.headers.authorization, key);
     const user_id = decoded["nickname"];
     console.log("플레이리스트를 삭제합니다.");
-    var playlistid = req.params.id;
     try{
+        var playlistid = req.params.id;
         db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}" AND owner="${user_id}";`, (err, rows, fields) => {
             if(err) return res.status(404).json({
                 code: 412,
