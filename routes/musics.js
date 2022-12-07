@@ -42,10 +42,10 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
     console.log("플레이리스트를 삭제합니다.");
     var playlistid = req.params.id;
     try{
-        db.query(`DELETE FROM PLAYLIST WHERE id=${playlistid} AND owner=${user_id};`, (err, rows, fields) => {
+        db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}" AND owner="${user_id}";`, (err, rows, fields) => {
             if(err) res.send(err);
             console.log(rows);
-            res.send(rows[0]);
+            res.send(rows);
             // if (!rows) 
             //     return res.status(404).json({
             //     code: 412,
