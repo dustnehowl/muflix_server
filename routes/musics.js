@@ -37,10 +37,18 @@ router.delete('/delMusic/:id', (req, res, next)=>{
 });
 
 router.delete('/delPlaylist/:id', (req, res, next) =>{
+    let decoded = jwt.verify(req.headers.authorization, key);
+    const user_id = decoded["nickname"];
     console.log("플레이리스트를 삭제합니다.");
     var playlistid = req.params.id;
-    db.query(`DELETE FROM PLAYLIST WHERE id=${playlistid}`, (err, rows, fields) => {
+    db.query(`DELETE FROM PLAYLIST WHERE id=${playlistid} AND owner=${user_id};`, (err, rows, fields) => {
         if(err) res.send(err);
+        if (rows.length == 0) 
+            return res.status(404).json({
+            code: 412,
+            message: '플레이리스트 소유자가 아닙니다.',
+          });
+        db.query(`DELETE FROM music_playlist WHERE playlist_id="${params.id}";`);
         res.send("플레이리스트 삭제 완료");
     })
 })
