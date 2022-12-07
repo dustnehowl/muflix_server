@@ -81,7 +81,7 @@ router.post('/addPlaylist', (req, res, next) => {
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        db.query(`SELECT id FROM USER WHERE email="${user_id}"`, (err, rows, fields) => {
+        db.query(`SELECT id FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
             if(err) console.log(err);
             const new_playlist = req.body;
             const user = rows[0];
@@ -109,8 +109,26 @@ router.post('/addPlaylist', (req, res, next) => {
     }
 });
 
-router.post('/updatePlaylist/:id', (req, res, next) => {
+router.put('/updatePlaylist/:id', (req, res, next) => {
     console.log("플레이리스트를 수정합니다.");
+    try{
+        const tmp_playlist = req.body;
+        console.log(tmp_playlist);
+        db.query(`UPDATE PLAYLIST SET name="${tmp_playlist.name}", information="${tmp_playlist.information}" WHERE id=${req.params.id};`);
+        db.query(`DELETE FROM music_playlist WHERE playlist_id="${req.params.id}";`);
+        for(let tmp_music of new_playlist.musics){
+            db.query(`INSERT INTO music_playlist
+                    ( music_id, playlist_id )
+                    VALUE ("${tmp_music}","${req.params.id}");`);
+        }
+        res.send({
+            "name": tmp_playlist.name,
+            "message": "플레이리스트 수정완료"
+        })
+    }
+    catch (e){
+        res.send(e);
+    }
 });
 
 module.exports = router;
