@@ -125,7 +125,7 @@ router.put('/updatePlaylist/:id', (req, res, next) => {
     try{
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        let owner = db.query(`SELECT owner FROM PLAYLIST WHERE id="${req.params.id}";`)[0];
+        let owner = db.query(`SELECT owner FROM PLAYLIST WHERE id="${req.params.id}";`);
         console.log(owner);
         const tmp_playlist = req.body;
         console.log(tmp_playlist);
