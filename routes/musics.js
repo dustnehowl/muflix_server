@@ -96,25 +96,21 @@ router.post('/addPlaylist', (req, res, next) => {
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        db.query(`SELECT id FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
-            if(err) console.log(err);
-            const new_playlist = req.body;
-            const user = rows[0];
-            console.log(user.id, new_playlist.name, new_playlist.information);
-            db.query(`INSERT INTO PLAYLIST
-                     ( owner, name, information )
-                     VALUE ("${user.id}", "${new_playlist.name}", "${new_playlist.information}");`);
-            db.query(`SELECT id FROM PLAYLIST WHERE owner="${user.id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
-                if(err) throw err;
-                for(let tmp_music of new_playlist.musics){
-                    db.query(`INSERT INTO music_playlist
-                            ( music_id, playlist_id )
-                            VALUE ("${tmp_music}","${rows[0].id}");`);
-                }
-                res.send({
-                    "name" : new_playlist.name,
-                    "message" : "플레이리스트 추가 완료",
-                });
+        const new_playlist = req.body;
+        console.log(user_id, new_playlist.name, new_playlist.information);
+        db.query(`INSERT INTO PLAYLIST
+                    ( owner, name, information )
+                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}");`);
+        db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
+            if(err) throw err;
+            for(let tmp_music of new_playlist.musics){
+                db.query(`INSERT INTO music_playlist
+                        ( music_id, playlist_id )
+                        VALUE ("${tmp_music}","${rows[0].id}");`);
+            }
+            res.send({
+                "name" : new_playlist.name,
+                "message" : "플레이리스트 추가 완료",
             });
         });
     }
