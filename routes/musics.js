@@ -43,14 +43,14 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
     try{
         var playlistid = req.params.id;
         console.log(playlistid)
-        // db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}" AND owner="${user_id}";`, (err, rows, fields) => {
-        //     if(err) return res.status(404).json({
-        //         code: 412,
-        //         message: '플레이리스트 소유자가 아닙니다.',
-        //     });
-        //     db.query(`DELETE FROM music_playlist WHERE playlist_id="${playlistid}";`);
-        //     res.send("플레이리스트 삭제 완료");
-        // });
+        db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}" AND owner="${user_id}";`, (err, rows, fields) => {
+            if(err) return res.status(404).json({
+                code: 412,
+                message: '플레이리스트 소유자가 아닙니다.',
+            });
+            db.query(`DELETE FROM music_playlist WHERE playlist_id="${playlistid}";`);
+            res.send("플레이리스트 삭제 완료");
+        });
     }
     catch (e){
         res.send(e);
