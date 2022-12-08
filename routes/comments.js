@@ -10,8 +10,7 @@ router.post('/newComment/:id', (req, res, next) => {
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        const new_comment = req.body["comment"];
-        console.log(req.body);
+        const new_comment = req.body.comment;
         db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
                 VALUE ("${user_id}", CURDATE(), "${new_comment}", 0, "${req.params.id}");`);
