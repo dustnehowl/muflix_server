@@ -4,3 +4,5 @@ const db = require('../db.js');
 var jwt = require('jsonwebtoken');
 
 const key = "yeonsu";
+
+module.exports = router;
