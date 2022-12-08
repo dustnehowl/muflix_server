@@ -23,4 +23,16 @@ router.post('/newComment/:id', (req, res, next) => {
     }
 });
 
+router.put('/upvote/:id', (req, res, next) => {
+    console.log("댓글에 공감합니다.");
+    try {
+        db.query(`UPDATE comment set upvote=comment.upvote + 1 WHERE id="${req.params.id}";`);
+        res.send("공감 완료.");
+    }
+    catch (e) {
+        console.log("error");
+        res.send(e);
+    }
+});
+
 module.exports = router;
