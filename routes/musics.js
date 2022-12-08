@@ -27,6 +27,16 @@ router.post('/addMusic', (req, res, next) => {
     });
 });
 
+router.get('/getUserplaylist', (req, res, next) => {
+    console.log("유저 플레이리스트를 조회합니다.");
+    let decoded = jwt.verify(req.headers.authorization, key);
+    const user_id = decoded["nickname"];
+    db.query(`SELECT * FROM PLAYLIST WHERE owner="${user_id}";`, (err, rows, fields) => {
+        if(err) throw err;
+        res.send(rows);
+    });
+});
+
 router.delete('/delMusic/:id', (req, res, next)=>{
     console.log("음악을 삭제합니다.");
     var musicid = req.params.id;
