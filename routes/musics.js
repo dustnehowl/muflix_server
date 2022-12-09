@@ -13,6 +13,20 @@ router.get('/getAllMusics', (req, res, next) => {
     });
 });
 
+router.get('getMp3file/:id', (req, res, next) => {
+    console.log("mp3파일을 로드합니다.");
+    try{
+        db.query(`SELECT name, singer FROM MUSIC WHERE id="${req.params.id}";`, (err, rows, fields) => {
+            const mp3url = rows[0].name + "_" + rows[0].singer + ".mp3";
+            res.send(mp3url);
+        });
+    }
+    catch (e){
+        console.log(e);
+        res.send(e);
+    }
+});
+
 router.post('/addMusic', (req, res, next) => {
     console.log("새로운 음악을 추가합니다.");
     const new_music = req.body;
