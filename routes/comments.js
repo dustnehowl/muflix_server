@@ -9,7 +9,7 @@ router.post('/newComment/:id', (req, res, next) => {
     console.log("댓글을 작성합니다.");
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
-        const user_id = req.body.anomymous ? "anomymous" : decoded["nickname"];
+        const user_id = req.body.anonymous ? "anonymous" : decoded["nickname"];
         const new_comment = req.body.comment;
         db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
