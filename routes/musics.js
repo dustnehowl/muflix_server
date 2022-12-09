@@ -13,7 +13,7 @@ router.get('/getAllMusics', (req, res, next) => {
     });
 });
 
-router.get('getMp3file/:id', (req, res, next) => {
+router.get('/getMp3file/:id', (req, res, next) => {
     console.log("mp3파일을 로드합니다.");
     try{
         db.query(`SELECT name, singer FROM MUSIC WHERE id="${req.params.id}";`, (err, rows, fields) => {
