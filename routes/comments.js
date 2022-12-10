@@ -13,7 +13,7 @@ router.post('/newComment/:id', (req, res, next) => {
         const new_comment = req.body.comment;
         db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
-                VALUE ("${user_id}", CURDATE(), "${new_comment}", 0, "${req.params.id}");`);
+                VALUE ("${user_id}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
         
         res.send("댓글 추가 완료.");
     }
