@@ -18,6 +18,7 @@ router.get('/getMp3file/:id', (req, res, next) => {
     try{
         db.query(`SELECT name, singer FROM MUSIC WHERE id="${req.params.id}";`, (err, rows, fields) => {
             const mp3url = rows[0].name + "_" + rows[0].singer + ".mp3";
+            db.query(`UPDATE MUSIC set num_streaming=MUSIC.num_streaming + 1 WHERE id="${req.params.id}";`);
             res.send(mp3url);
         });
     }
@@ -95,7 +96,6 @@ router.get('/getMusic/:id', (req, res, next) => {
     console.log("음악정보를 조회합니다.");
     db.query(`SELECT * FROM MUSIC WHERE id=${musicid}`,(err, rows, fields) => {
         if(err) throw err;
-        db.query(`UPDATE MUSIC set num_streaming=MUSIC.num_streaming + 1 WHERE id="${musicid}";`);
         res.send(rows);
     })
 });
