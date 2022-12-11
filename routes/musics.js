@@ -129,8 +129,8 @@ router.post('/addPlaylist', (req, res, next) => {
         const new_playlist = req.body;
         console.log(user_id, new_playlist.name, new_playlist.information);
         db.query(`INSERT INTO PLAYLIST
-                    ( owner, name, information )
-                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}");`);
+                    ( owner, name, information, primary_music)
+                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.represent}");`);
         db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
             if(err) throw err;
             for(let tmp_music of new_playlist.musics){
