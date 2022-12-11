@@ -95,6 +95,7 @@ router.get('/getMusic/:id', (req, res, next) => {
     console.log("음악정보를 조회합니다.");
     db.query(`SELECT * FROM MUSIC WHERE id=${musicid}`,(err, rows, fields) => {
         if(err) throw err;
+        db.query(`UPDATE MUSIC set num_streaming=MUSIC.num_streaming + 1 WHERE id="${musicid}";`);
         res.send(rows);
     })
 });
