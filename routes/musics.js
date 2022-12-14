@@ -150,7 +150,7 @@ router.post('/addPlaylist', (req, res, next) => {
             try {
                 db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err2, rows2, fields) => {
                     console.log("나와주세요!!!");
-                    console.log(rows2[0]);
+                    console.log(rows2);
                     if(err2) throw err2;
                     for(let tmp_music of new_playlist.musics){
                         db.query(`INSERT INTO music_playlist
