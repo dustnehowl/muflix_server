@@ -14,16 +14,13 @@ router.post('/newComment/:id', (req, res, next) => {
         var user_nick;
         db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
             if (err) throw err;
-            if (rows[0].name) user_nick = rows[0].name;
-
-            user_nick = req.body.anonymous ? "익명" : user_nick;
+            user_nick = req.body.anonymous ? "익명" : rows[0].name;
 
             db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
                 VALUE ("${user_nick}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
             res.send("댓글 추가 완료.");
         });
-
     }
     catch (e) {
         console.log("error");
