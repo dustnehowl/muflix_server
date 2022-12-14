@@ -49,6 +49,19 @@ router.get('/getUserplaylist', (req, res, next) => {
     });
 });
 
+router.get('/getTop10', (req, res, next) => {
+    console.log("탑텐 뮤직 플레이리스트를 조회합니다.");
+    try{
+        db.query(`SELECT * FROM mydb.MUSIC order by num_streaming desc LiMIT 10;`, (err, rows, fields) => {
+            if (err) throw err;
+            res.send(rows);
+        });
+    }
+    catch (e){
+        res.send(e);
+    }
+});
+
 router.delete('/delMusic/:id', (req, res, next)=>{
     console.log("음악을 삭제합니다.");
     var musicid = req.params.id;
