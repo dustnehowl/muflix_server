@@ -128,8 +128,8 @@ router.post('/addPlaylist', (req, res, next) => {
         console.log(user_id, new_playlist.name, new_playlist.information);
         db.query(`SELECT album_cover FROM MUSIC WHERE id="${new_playlist.representative}";`,(err, rows, fields) =>{
             db.query(`INSERT INTO PLAYLIST
-                    ( owner, name, information, representive_image)
-                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${rows[0].album_cover}");`);
+                    ( owner, name, information, primary_music, representive_image)
+                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}", "${rows[0].album_cover}");`);
         });
         // db.query(`INSERT INTO PLAYLIST
         //             ( owner, name, information, primary_music)
