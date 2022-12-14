@@ -13,11 +13,9 @@ router.post('/newComment/:id', (req, res, next) => {
         const new_comment = req.body.comment;
         var user_nick;
         db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
-            if (err) throw err;
+            if (err) user_nick = "익명";
             if (rows[0].name) user_nick = rows[0].name;
-            else user_nick = "익명";
 
-            console.log(user_nick);
             db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
                 VALUE ("${user_nick}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
