@@ -139,25 +139,33 @@ router.post('/addPlaylist', (req, res, next) => {
         const user_id = decoded["nickname"];
         const new_playlist = req.body;
         console.log(user_id, new_playlist.name, new_playlist.information);
-        db.query(`SELECT album_cover FROM MUSIC WHERE id="${new_playlist.representative}";`,(err, rows, fields) =>{
-            if (err) throw err;
-            console.log("여기까진 들어왔당");
-            db.query(`INSERT INTO PLAYLIST
-                    ( owner, name, information, primary_music, representive_image)
-                    VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}", "${rows[0].album_cover}");`);
-        });
-        db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
-            if(err) throw err;
-            for(let tmp_music of new_playlist.musics){
-                db.query(`INSERT INTO music_playlist
-                        ( music_id, playlist_id )
-                        VALUE ("${tmp_music}","${rows[0].id}");`);
-            }
-            res.send({
-                "name" : new_playlist.name,
-                "message" : "플레이리스트 추가 완료",
+        try {
+            db.query(`SELECT album_cover FROM MUSIC WHERE id="${new_playlist.representative}";`,(err, rows, fields) =>{
+                if (err) throw err;
+                console.log("여기까진 들어왔당");
+                db.query(`INSERT INTO PLAYLIST
+                        ( owner, name, information, primary_music, representive_image)
+                        VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}", "${rows[0].album_cover}");`);
             });
-        });
+            try {
+                db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
+                    if(err) throw err;
+                    for(let tmp_music of new_playlist.musics){
+                        db.query(`INSERT INTO music_playlist
+                                ( music_id, playlist_id )
+                                VALUE ("${tmp_music}","${rows[0].id}");`);
+                    }
+                    res.send({
+                        "name" : new_playlist.name,
+                        "message" : "플레이리스트 추가 완료",
+                    });
+                });
+            } catch (error2) {
+                res.send(error);
+            }
+        } catch (error) {
+            res.send(error);
+        }
     }
     catch (e) {
         res.send(e);
