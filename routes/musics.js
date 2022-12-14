@@ -148,12 +148,14 @@ router.post('/addPlaylist', (req, res, next) => {
                         VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}", "${rows[0].album_cover}");`);
             });
             try {
-                db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
-                    if(err) throw err;
+                db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err2, rows2, fields) => {
+                    console.log("나와주세요!!!");
+                    console.log(rows2[0]);
+                    if(err2) throw err2;
                     for(let tmp_music of new_playlist.musics){
                         db.query(`INSERT INTO music_playlist
                                 ( music_id, playlist_id )
-                                VALUE ("${tmp_music}","${rows[0].id}");`);
+                                VALUE ("${tmp_music}","${rows2[0].id}");`);
                     }
                     res.send({
                         "name" : new_playlist.name,
@@ -161,7 +163,7 @@ router.post('/addPlaylist', (req, res, next) => {
                     });
                 });
             } catch (error2) {
-                res.send(error);
+                res.send(error2);
             }
         } catch (error) {
             res.send(error);
