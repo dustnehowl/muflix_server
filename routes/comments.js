@@ -11,8 +11,9 @@ router.post('/newComment/:id', (req, res, next) => {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = req.body.anonymous ? "익명" : decoded["nickname"];
         const new_comment = req.body.comment;
-        const user_nick = db.query(`SELECT name FROM USER WHERE email="${user_id}";`);
-        console.log(user_nick);
+        db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
+            console.log(rows[0]);
+        });
         db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
                 VALUE ("${user_id}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
