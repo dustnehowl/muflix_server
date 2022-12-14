@@ -82,8 +82,8 @@ router.delete('/delPlaylist/:id', (req, res, next) =>{
             console.log(rows[0].owner);
             console.log(user_id);
             if(rows[0].owner == user_id){
-                db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}";`, (err, rows, fields) => {
-                    if(err) throw err;
+                db.query(`DELETE FROM PLAYLIST WHERE id="${playlistid}";`, (err2, rows, fields) => {
+                    if(err2) throw err2;
                     db.query(`DELETE FROM music_playlist WHERE playlist_id="${playlistid}";`);
                     res.send("플레이리스트 삭제 완료");
                 });
@@ -140,13 +140,12 @@ router.post('/addPlaylist', (req, res, next) => {
         const new_playlist = req.body;
         console.log(user_id, new_playlist.name, new_playlist.information);
         db.query(`SELECT album_cover FROM MUSIC WHERE id="${new_playlist.representative}";`,(err, rows, fields) =>{
+            if (err) throw err;
+            console.log("여기까진 들어왔당");
             db.query(`INSERT INTO PLAYLIST
                     ( owner, name, information, primary_music, representive_image)
                     VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}", "${rows[0].album_cover}");`);
         });
-        // db.query(`INSERT INTO PLAYLIST
-        //             ( owner, name, information, primary_music)
-        //             VALUE ("${user_id}", "${new_playlist.name}", "${new_playlist.information}", "${new_playlist.representative}");`);
         db.query(`SELECT id FROM PLAYLIST WHERE owner="${user_id}" AND name="${new_playlist.name}";`, (err, rows, fields) => {
             if(err) throw err;
             for(let tmp_music of new_playlist.musics){
@@ -161,7 +160,6 @@ router.post('/addPlaylist', (req, res, next) => {
         });
     }
     catch (e) {
-        console.log("error");
         res.send(e);
     }
 });
