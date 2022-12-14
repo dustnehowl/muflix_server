@@ -9,12 +9,14 @@ router.post('/newComment/:id', (req, res, next) => {
     console.log("댓글을 작성합니다.");
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
-        const user_id = req.body.anonymous ? "익명" : decoded["nickname"];
+        const user_id = decoded["nickname"];
         const new_comment = req.body.comment;
         var user_nick;
         db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
-            if (err) user_nick = "익명";
+            if (err) throw err;
             if (rows[0].name) user_nick = rows[0].name;
+
+            user_nick = req.body.anonymous ? "익명" : user_nick;
 
             db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
