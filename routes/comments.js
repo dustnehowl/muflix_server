@@ -12,11 +12,12 @@ router.post('/newComment/:id', (req, res, next) => {
         const user_id = req.body.anonymous ? "익명" : decoded["nickname"];
         const new_comment = req.body.comment;
         db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
-            console.log(rows[0]);
+            if (err) throw err;
+            const user_nick = rows[0].name;
         });
         db.query(`INSERT INTO comment 
                 ( writer, write_time, comments, upvote, music_id )
-                VALUE ("${user_id}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
+                VALUE ("${user_nick}", NOW(), "${new_comment}", 0, "${req.params.id}");`);
         
         res.send("댓글 추가 완료.");
     }
