@@ -10,7 +10,6 @@ router.post('/newComment/:id', (req, res, next) => {
     try {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        console.log(user_id);
         const new_comment = req.body.comment;
         var user_nick;
         db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) => {
