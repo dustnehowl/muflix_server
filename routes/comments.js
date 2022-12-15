@@ -47,8 +47,12 @@ router.delete('/delComment/:id', (req, res, next) => {
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
 
-        db.query(`DELETE FROM comment WHERE writer="${user_id}" AND id="${req.params.id}";`);
-        res.send("댓글 삭제 완료.");
+        db.query(`SELECT name FROM USER WHERE email="${user_id}";`, (err, rows, fields) =>{
+            if(err) throw err;
+            const writer = rows[0].name;
+            db.query(`DELETE FROM comment WHERE writer="${writer}" AND id="${req.params.id}";`);
+            res.send("댓글 삭제 완료.");
+        });
     }
     catch (e) {
         console.log("error");
