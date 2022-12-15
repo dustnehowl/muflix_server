@@ -121,8 +121,14 @@ router.get('/getAllPlaylist', (req, res, next) => {
 router.get('/getPlaylist/:id', (req, res, next) => {
     console.log("특정 플레이리스트를 조회합니다.");
     var playlistid = req.params.id;
-    db.query(`SELECT * FROM PLAYLIST WHERE id="${playlistid}"`, (err, rows, fields) => {
+    const query = `SELECT * FROM 
+                    (SELECT * FROM mydb.PLAYLIST WHERE id="${playlistid}") as p join 
+	                (SELECT id as music_id, album_cover FROM mydb.MUSIC ) as m
+	                on p.primary_music = m.music_id;`
+                    
+    db.query(query, (err, rows, fields) => {
         var playlist = rows[0];
+        
         db.query(`SELECT music_id FROM music_playlist WHERE playlist_id="${playlistid}"`, (err2, rows2, fields2)=>{
             res.send({
                 "playlist_info" : playlist,
