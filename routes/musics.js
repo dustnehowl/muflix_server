@@ -112,7 +112,11 @@ router.get('/getMusic/:id', (req, res, next) => {
 
 router.get('/getAllPlaylist', (req, res, next) => {
     console.log("플레이리스트를 조회합니다.");
-    db.query(`SELECT * FROM PLAYLIST`, (err, rows, fields) => {
+    const query = `SELECT * FROM 
+                    (SELECT * FROM mydb.PLAYLIST) as p join 
+	                (SELECT id as music_id, album_cover FROM mydb.MUSIC ) as m
+	                on p.primary_music = m.music_id;`
+    db.query(query, (err, rows, fields) => {
         if(err) throw err;
         res.send(rows);
     });
