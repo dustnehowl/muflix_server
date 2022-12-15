@@ -14,7 +14,7 @@ var app = express();
 // view engine setup
 app.use(cors({
   //'http://117.17.198.45:3000'
-  origin: 'http://localhost:3000',
+  origin: 'http://117.17.198.45:3000',
   credentials: true
 }))
 
