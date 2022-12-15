@@ -128,6 +128,7 @@ router.get('/getPlaylist/:id', (req, res, next) => {
                     
     db.query(query, (err, rows, fields) => {
         var playlist = rows[0];
+        console.log(playlist);
         
         db.query(`SELECT music_id FROM music_playlist WHERE playlist_id="${playlistid}"`, (err2, rows2, fields2)=>{
             res.send({
