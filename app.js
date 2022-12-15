@@ -13,7 +13,7 @@ var app = express();
 
 // view engine setup
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://sparkling-frangollo-14ce4f.netlify.app/',
   credentials: true
 }))
 
