@@ -170,10 +170,12 @@ router.put('/updatePlaylist/:id', (req, res, next) => {
     try{
         let decoded = jwt.verify(req.headers.authorization, key);
         const user_id = decoded["nickname"];
-        let owner = db.query(`SELECT owner FROM PLAYLIST WHERE id="${req.params.id}";`);
-        console.log(owner);
         const tmp_playlist = req.body;
-        db.query(`UPDATE PLAYLIST SET name="${tmp_playlist.name}", information="${tmp_playlist.information}" WHERE id=${req.params.id};`);
+        db.query(`UPDATE PLAYLIST SET 
+                name="${tmp_playlist.name}", 
+                information="${tmp_playlist.information}", 
+                primary_music="${new_playlist.representative}"
+                WHERE id=${req.params.id};`);
         db.query(`DELETE FROM music_playlist WHERE playlist_id="${req.params.id}";`);
         for(let tmp_music of tmp_playlist.musics){
             db.query(`INSERT INTO music_playlist
