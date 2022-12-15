@@ -185,7 +185,7 @@ router.put('/updatePlaylist/:id', (req, res, next) => {
         db.query(`UPDATE PLAYLIST SET 
                 name="${tmp_playlist.name}", 
                 information="${tmp_playlist.information}", 
-                primary_music="${new_playlist.representative}"
+                primary_music="${tmp_playlist.representative}"
                 WHERE id=${req.params.id};`);
         db.query(`DELETE FROM music_playlist WHERE playlist_id="${req.params.id}";`);
         for(let tmp_music of tmp_playlist.musics){
